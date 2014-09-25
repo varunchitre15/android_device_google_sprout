@@ -1,0 +1,7 @@
+#<src>                                                <mnt_point>  <type>  <mnt_flags and options>                        <fs_mgr_flags>
+/dev/block/platform/mtk-msdc.0/by-name/boot           /boot        emmc    defaults                                       defaults
+/dev/block/platform/mtk-msdc.0/by-name/recovery        /recovery   emmc    defaults                                       defaults
+/dev/block/platform/mtk-msdc.0/by-name/system         /system      ext4    ro,barrier=1                                   wait
+/dev/block/platform/mtk-msdc.0/by-name/userdata       /data        ext4    nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered         wait,check,encryptable=/dev/block/platform/msm_sdcc.1/by-name/metadata
+/dev/block/platform/mtk-msdc.0/by-name/cache          /cache       ext4    noatime,nosuid,nodev,barrier=1,data=ordered,noauto_da_alloc,errors=panic    wait,check
+/dev/block/mmcblk1p1       /external_sd     auto      defaults        defaults
