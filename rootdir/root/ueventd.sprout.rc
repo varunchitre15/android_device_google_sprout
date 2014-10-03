@@ -1,0 +1,67 @@
+#change partition permission
+/dev/block/mmcblk0p1      0640	 root	    system
+/dev/block/mmcblk0p2      0640	 root	    system
+/dev/misc-sd              0660   root       system
+
+
+#connectivity
+# Create char device file for WMT, GPS, BT, FM, WIFI
+/dev/stpwmt              0660  system      system
+/dev/wmtdetect           0660  system      system
+
+# BT
+/dev/stpbt               0660  bluetooth   radio
+
+# GPS
+/dev/stpgps              0660  gps         gps
+/dev/gps                 0660  gps         system
+
+# WIFI
+/dev/wmtWifi             0660  system      system
+
+#FMRadio
+/dev/fm                  0660  media       media
+
+#BT SCO CVSD, for MT6572 and MT6582 CVSD codec on AP
+/dev/ebc                  0660  media       media
+
+# add the read write right of ttyUSB*
+/dev/bus/usb/*            0660   root       usb
+/dev/ttyUSB0              0660   radio      radio
+/dev/ttyUSB1              0660   radio      radio
+/dev/ttyUSB2              0660   radio      radio
+/dev/ttyUSB3              0660   radio      radio
+/dev/ttyUSB4              0660   radio      radio
+
+/dev/ccci*                0660   radio      radio
+/dev/ttyC*                0660   radio      radio
+/sys/kernel/ccci          modem_info   0644   radio      radio
+/sys/kernel/ccci          md1_postfix  0644   radio      radio
+/sys/kernel/ccci          md2_postfix  0644   radio      radio
+/dev/eemcs*               0660   radio      radio
+/dev/ccci_pcm_rx          0660   media      media
+/dev/ccci_pcm_tx          0660   media      media
+
+/sys/devices/platform/leds-mt65xx/leds/green   delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/green   delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/red     delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/red     delay_off      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/blue    delay_on      0664  system   system
+/sys/devices/platform/leds-mt65xx/leds/blue    delay_off      0664  system   system
+
+
+#GPIO
+/dev/mtgpio    0600    radio    root
+
+#MTK BTIF driver
+/dev/btif 0600  system system
+
+#FOR VIA MODEM
+/dev/ttySDIO*    0660    radio    sdcard_rw
+/dev/ttyRB*      0660    radio    radio
+
+# Mali node
+/dev/mali0       0666    system   graphics
+
+#touch
+/dev/touch       0660    root     system
