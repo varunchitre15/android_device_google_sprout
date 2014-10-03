@@ -4,6 +4,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 # Needed stuff
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
+# Call device specific makefile
+$(call inherit-product, device/micromax/sprout/sprout.mk)
+
 LOCAL_PATH := device/micromax/sprout
 
 PRODUCT_NAME := cm_sprout
