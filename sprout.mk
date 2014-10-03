@@ -62,6 +62,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/root/twrp.fstab:recovery/root/etc/twrp.fstab
 	
+PRODUCT_PACKAGES += \
+    librs_jni \
+    com.android.future.usb.accessory
+
+PRODUCT_PACKAGES += \
+    setup_fs \
+    e2fsck
+	
 PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
