@@ -9,6 +9,8 @@ $(call inherit-product, device/micromax/sprout/sprout.mk)
 
 LOCAL_PATH := device/micromax/sprout
 
+PRODUCT_BUILD_PROP_OVERRIDES += BUILD_FINGERPRINT=4.4.4/KPW53/1379542:user/release-keys PRIVATE_BUILD_DESC="sprout-user 4.4.4 KPW53 1379542 release-keys"
+
 PRODUCT_NAME := cm_sprout
 PRODUCT_DEVICE :=Sprout
 PRODUCT_BRAND := Micromax
