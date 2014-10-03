@@ -14,6 +14,3 @@ PRODUCT_DEVICE :=Sprout
 PRODUCT_BRAND := Micromax
 PRODUCT_MANUFACTURER := Micromax
 PRODUCT_MODEL := A1
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/twrp.fstab:recovery/root/etc/twrp.fstab
