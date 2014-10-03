@@ -1,0 +1,8 @@
+[
+
+  {
+    "repository": "android_kernel_google_sprout",
+    "target_path": "kernel/google/sprout"
+  }
+ 
+]
