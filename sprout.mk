@@ -60,7 +60,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/root/factory_init.rc:root/factory_init.rc \
     $(LOCAL_PATH)/rootdir/root/fstab.sprout:root/fstab.sprout \
     $(LOCAL_PATH)/rootdir/root/ueventd.sprout.rc:root/ueventd.sprout.rc \
-    $(LOCAL_PATH)/rootdir/root/init.sprout.usb.rc:root/init.sprout.usb.rc 
+    $(LOCAL_PATH)/rootdir/root/init.sprout.usb.rc:root/init.sprout.usb.rc
+
+DEVICE_PACKAGE_OVERLAYS := device/google/sprout/overlay
 	
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/root/twrp.fstab:recovery/root/etc/twrp.fstab
