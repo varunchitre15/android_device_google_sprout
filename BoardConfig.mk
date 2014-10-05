@@ -1,4 +1,4 @@
-LOCAL_PATH := device/micromax/sprout
+LOCAL_PATH := device/google/sprout
 
 TARGET_BOARD_PLATFORM := mt6582
 TARGET_CPU_ABI := armeabi-v7a
@@ -24,7 +24,7 @@ BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_PAGESIZE := 2048
 DEVICE_RESOLUTION := 480x854
 
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/micromax/sprout/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/google/sprout/bluetooth
 
 TARGET_KERNEL_SOURCE := kernel/google/sprout
 TARGET_KERNEL_CONFIG := sprout_defconfig
@@ -53,3 +53,4 @@ TARGET_GLOBAL_CFLAGS   += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_USERIMAGES_USE_EXT4:=true
 USE_CAMERA_STUB := true
+
