@@ -65,3 +65,9 @@ TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_USERIMAGES_USE_EXT4:=true
 USE_CAMERA_STUB := true
 
+BOARD_SEPOLICY_DIRS += \
+    device/google/sprout/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    file_contexts \
+    device.te
