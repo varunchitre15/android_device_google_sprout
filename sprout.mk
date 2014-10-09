@@ -51,6 +51,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/rootdir/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/rootdir/system/etc/audio_policy.conf:system/etc/audio_policy.conf \
+
+# Thermal
+PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/configs/thermal.conf:system/etc/.tp/thermal.conf
 	
 # Keylayout
 PRODUCT_COPY_FILES += \
