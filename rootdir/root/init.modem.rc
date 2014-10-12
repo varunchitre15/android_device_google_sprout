@@ -31,9 +31,9 @@ service muxreport-daemon /system/bin/muxreport
 service ril-daemon-mtk /system/bin/mtkrild
     class core
     socket rild stream 660 root radio
+    socket rild1 stream 660 root radio
     socket rild2 stream 660 root radio
     socket rild3 stream 660 root radio
-    socket rild4 stream 660 root radio
     socket rild-debug stream 660 radio system
     socket rild-oem stream 660 radio system
     socket rild-mtk-ut stream 660 radio net_bt
