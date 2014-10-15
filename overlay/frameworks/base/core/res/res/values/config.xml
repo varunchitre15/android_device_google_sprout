@@ -211,9 +211,6 @@
         <item>255</item>
     </integer-array>
 
-    <!-- Timeout to wait for NTP server response. -->
-    <integer name="config_ntpTimeout">8000</integer>
-
     <!-- Safe headphone volume index. When music stream volume is below this index
     the SPL on headphone output is compliant to EN 60950 requirements for portable music
     players. -->
@@ -254,6 +251,9 @@
 
     <!-- Boolean indicating whether the wifi chipset has background scan support -->
     <bool translatable="false" name="config_wifi_background_scan_support">false</bool>
+
+    <!-- Whether to enable auto provisioning the app for new SIM card on boot.-->
+    <bool name="config_auto_provision_enable">true</bool>
 
     <!-- LED Flashlight -->
     <bool name="config_enableTorch">true</bool>
