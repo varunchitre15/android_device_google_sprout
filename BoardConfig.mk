@@ -66,6 +66,8 @@ TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_USERIMAGES_USE_EXT4:=true
 USE_CAMERA_STUB := true
 
+BOARD_RIL_CLASS := ../../../device/google/sprout/ril/
+
 BOARD_SEPOLICY_DIRS += \
     device/google/sprout/sepolicy
 
