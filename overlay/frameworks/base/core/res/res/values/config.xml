@@ -59,9 +59,21 @@
 
     <!-- If this is true, the screen will come on when you plug/unplug usb/power/whatever. -->
     <bool name="config_unplugTurnsOnScreen">true</bool>
+	
+    <!-- Does the notification LED support multiple colors? Used to decide if the user can change the colors -->
+    <bool name="config_multiColorNotificationLed">false</bool>
 
-    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveNotificationLed">false</bool>
+    <!-- Default color for notification LED is green. -->
+    <color name="config_defaultNotificationColor">#ff00ff00</color>
+
+    <!-- Default value for led color when battery is low on charge -->
+    <integer name="config_notificationsBatteryLowARGB">0xffff0000</integer>
+
+    <!-- Default value for led color when battery is medium charged -->
+    <integer name="config_notificationsBatteryMediumARGB">0xffff0000</integer>
+
+    <!-- Default value for led color when battery is fully charged -->
+    <integer name="config_notificationsBatteryFullARGB">0xff00ff00</integer>
 
     <!-- Boolean indicating if restoring network selection should be skipped -->
     <!-- The restoring is handled by modem if it is true -->
