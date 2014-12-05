@@ -98,7 +98,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     setup_fs \
-    e2fsck
+    e2fsck \
 	
 PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
