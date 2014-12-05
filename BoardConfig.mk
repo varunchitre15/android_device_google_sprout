@@ -33,6 +33,7 @@ TARGET_KERNEL_SOURCE := kernel/mediatek/sprout
 TARGET_KERNEL_CONFIG := cyanogenmod_sprout_defconfig
 
 BOARD_RECOVERY_SWIPE := true
+KERNEL_TOOLCHAIN := $(ARM_EABI_TOOLCHAIN)/../../arm-eabi-4.7/bin
 
 # TWRP stuff
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
