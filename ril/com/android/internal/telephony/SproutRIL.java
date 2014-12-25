@@ -18,6 +18,8 @@ package com.android.internal.telephony;
 
 import static com.android.internal.telephony.RILConstants.*;
 import android.content.Context;
+import android.net.LocalSocket;
+import android.net.LocalSocketAddress;
 import android.os.AsyncResult;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -27,6 +29,7 @@ import android.telephony.Rlog;
 import android.telephony.SignalStrength;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class SproutRIL extends RIL implements CommandsInterface {
 
@@ -60,6 +63,219 @@ static final int RIL_REQUEST_SET_3G_CAPABILITY = 128;
 		    }
 	    }
     }
+
+    private static int readRilMessage(InputStream is, byte[] buffer)
+            throws IOException {
+        int countRead;
+        int offset;
+        int remaining;
+        int messageLength;
+
+        // First, read in the length of the message
+        offset = 0;
+        remaining = 4;
+        do {
+            countRead = is.read(buffer, offset, remaining);
+
+            if (countRead < 0 ) {
+                Rlog.e(RILJ_LOG_TAG, "Hit EOS reading message length");
+                return -1;
+            }
+
+            offset += countRead;
+            remaining -= countRead;
+        } while (remaining > 0);
+
+        messageLength = ((buffer[0] & 0xff) << 24)
+                | ((buffer[1] & 0xff) << 16)
+                | ((buffer[2] & 0xff) << 8)
+                | (buffer[3] & 0xff);
+
+        // Then, re-use the buffer and read in the message itself
+        offset = 0;
+        remaining = messageLength;
+        do {
+            countRead = is.read(buffer, offset, remaining);
+
+            if (countRead < 0 ) {
+                Rlog.e(RILJ_LOG_TAG, "Hit EOS reading message.  messageLength=" + messageLength
+                        + " remaining=" + remaining);
+                return -1;
+            }
+
+            offset += countRead;
+            remaining -= countRead;
+        } while (remaining > 0);
+
+        return messageLength;
+    }
+	
+    protected RILReceiver createRILReceiver() {
+        return new MTKRILReceiver();
+    }
+
+    protected class MTKRILReceiver extends RILReceiver {
+        byte[] buffer;
+
+        protected MTKRILReceiver() {
+            buffer = new byte[RIL_MAX_COMMAND_BYTES];
+        }
+
+        @Override
+        public void
+        run() {
+            int retryCount = 0;
+            String rilSocket = "rild";
+
+            try {for (;;) {
+                LocalSocket s = null;
+                LocalSocketAddress l;
+
+                if (mInstanceId == null || mInstanceId == 0 ) {
+                    rilSocket = SOCKET_NAME_RIL[0];
+                } else {
+                    rilSocket = SOCKET_NAME_RIL[mInstanceId];
+                }
+
+                int currentSim;
+
+                if (mInstanceId == null || mInstanceId ==0) {
+                currentSim = 0;
+                } else {
+                currentSim = mInstanceId;
+                }
+
+
+                int m3GsimId = 0;
+                m3GsimId =  SystemProperties.getInt("gsm.3gswitch", 0);
+                if((m3GsimId > 0) && (m3GsimId <= 2)) {
+                --m3GsimId;
+                } else {
+                m3GsimId=0;
+                }
+
+                if (m3GsimId >= 1) {
+                    if (currentSim == 0) {
+                       rilSocket = SOCKET_NAME_RIL[m3GsimId];
+                    }
+                    else if(currentSim == m3GsimId) {
+                       rilSocket = SOCKET_NAME_RIL[0];
+                    }
+                    if (RILJ_LOGD) riljLog("Capability switched, swap sockets [" + currentSim + ", " + rilSocket + "]");
+                }
+
+                try {
+                    s = new LocalSocket();
+                    l = new LocalSocketAddress(rilSocket,
+                            LocalSocketAddress.Namespace.RESERVED);
+                    s.connect(l);
+                } catch (IOException ex){
+                    try {
+                        if (s != null) {
+                            s.close();
+                        }
+                    } catch (IOException ex2) {
+                        //ignore failure to close after failure to connect
+                    }
+
+                    // don't print an error message after the the first time
+                    // or after the 8th time
+
+                    if (retryCount == 8) {
+                        Rlog.e (RILJ_LOG_TAG,
+                            "Couldn't find '" + rilSocket
+                            + "' socket after " + retryCount
+                            + " times, continuing to retry silently");
+                    } else if (retryCount > 0 && retryCount < 8) {
+                        Rlog.i (RILJ_LOG_TAG,
+                            "Couldn't find '" + rilSocket
+                            + "' socket; retrying after timeout");
+                    }
+
+                    try {
+                        Thread.sleep(SOCKET_OPEN_RETRY_MILLIS);
+                    } catch (InterruptedException er) {
+                    }
+
+                    retryCount++;
+                    continue;
+                }
+
+                retryCount = 0;
+
+                mSocket = s;
+                Rlog.i(RILJ_LOG_TAG, "Connected to '" + rilSocket + "' socket");
+
+                /* Compatibility with qcom's DSDS (Dual SIM) stack */
+                if (needsOldRilFeature("qcomdsds")) {
+                    String str = "SUB1";
+                    byte[] data = str.getBytes();
+                    try {
+                        mSocket.getOutputStream().write(data);
+                        Rlog.i(LOG_TAG, "Data sent!!");
+                    } catch (IOException ex) {
+                            Rlog.e(LOG_TAG, "IOException", ex);
+                    } catch (RuntimeException exc) {
+                        Rlog.e(LOG_TAG, "Uncaught exception ", exc);
+                    }
+                }
+
+                int length = 0;
+                try {
+                    InputStream is = mSocket.getInputStream();
+
+                    for (;;) {
+                        Parcel p;
+
+                        length = readRilMessage(is, buffer);
+
+                        if (length < 0) {
+                            // End-of-stream reached
+                            break;
+                        }
+
+                        p = Parcel.obtain();
+                        p.unmarshall(buffer, 0, length);
+                        p.setDataPosition(0);
+
+                        //Rlog.v(RILJ_LOG_TAG, "Read packet: " + length + " bytes");
+
+                        processResponse(p);
+                        p.recycle();
+                    }
+                } catch (java.io.IOException ex) {
+                    Rlog.i(RILJ_LOG_TAG, "'" + rilSocket + "' socket closed",
+                          ex);
+                } catch (Throwable tr) {
+                    Rlog.e(RILJ_LOG_TAG, "Uncaught exception read length=" + length +
+                        "Exception:" + tr.toString());
+                }
+
+                Rlog.i(RILJ_LOG_TAG, "Disconnected from '" + rilSocket
+                      + "' socket");
+
+                setRadioState (RadioState.RADIO_UNAVAILABLE);
+
+                try {
+                    mSocket.close();
+                } catch (IOException ex) {
+                }
+
+                mSocket = null;
+                RILRequest.resetSerial();
+
+                // Clear request list on close
+                clearRequestList(RADIO_NOT_AVAILABLE, false);
+            }} catch (Throwable tr) {
+                Rlog.e(RILJ_LOG_TAG,"Uncaught exception", tr);
+            }
+
+            /* We're disconnected so we don't know the ril version */
+            notifyRegistrantsRilConnectionChanged(-1);
+        }
+    }
+
+
 
 	protected RILRequest
     processSolicited (Parcel p) {
