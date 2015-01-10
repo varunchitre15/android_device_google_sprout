@@ -96,6 +96,9 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.service.adb.enable=1 \
 	ro.telephony.ril_class=SproutRIL \
     persist.service.debuggable=1
+
+PRODUCT_PACKAGES += \
+    libbt-vendor
 	
 PRODUCT_PACKAGES += \
     librs_jni \
